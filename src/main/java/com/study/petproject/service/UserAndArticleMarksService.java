@@ -4,6 +4,9 @@ import com.study.petproject.model.UserAndArticleMarks;
 import com.study.petproject.repo.UserAndArticleMarksRepo;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class UserAndArticleMarksService extends ObjectService<UserAndArticleMarks> {
 
@@ -20,19 +23,19 @@ public class UserAndArticleMarksService extends ObjectService<UserAndArticleMark
     }
 
     @Override
-    public  void getAll(UserAndArticleMarks obj) {
-        marksRepo.findAll();
+    public List<UserAndArticleMarks> getAll() {
+        return marksRepo.findAll();
     }
     @Override
-    public  void getOne(UserAndArticleMarks obj) {
-        //marksRepo.findById(obj.id);//TODO: здесь и в репо сделать нормальный тип
+    public Optional<UserAndArticleMarks> getOne(long id) {
+        return marksRepo.findById(id);//TODO: здесь и в репо сделать нормальный тип
     }
     @Override
     public void edit(UserAndArticleMarks obj) {
         marksRepo.save(obj);
     }
     @Override
-    public void delete(UserAndArticleMarks obj) {
-        marksRepo.delete(obj);
+    public void delete(long id) {
+        marksRepo.deleteById(id);
     }
 }

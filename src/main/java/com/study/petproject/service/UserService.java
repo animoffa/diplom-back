@@ -4,6 +4,9 @@ import com.study.petproject.model.User;
 import com.study.petproject.repo.UserRepo;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class UserService extends ObjectService<User> {
 
@@ -25,14 +28,15 @@ public class UserService extends ObjectService<User> {
     }
 
     @Override
-    public  void getAll(User obj) {
-        userRepo.findAll();
+    public List<User> getAll() {
+        return userRepo.findAll();
     }
     @Override
-    public  void getOne(User obj) {
-        userRepo.findById(obj.id);
+    public Optional<User> getOne(long id) {
+        return userRepo.findById(id);
     }
     @Override
-    public void delete(User obj) {
+    public void delete(long id) {
+        userRepo.deleteById(id);
     }
 }

@@ -4,6 +4,9 @@ import com.study.petproject.model.Article;
 import com.study.petproject.repo.ArticleRepo;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class ArticleService extends ObjectService<Article> {
 
@@ -15,7 +18,6 @@ public class ArticleService extends ObjectService<Article> {
 
     @Override
     public void add(Article obj) {
-        System.out.println("add user");
         articleRepo.save(obj);
     }
 
@@ -25,16 +27,16 @@ public class ArticleService extends ObjectService<Article> {
     }
 
     @Override
-    public  void getAll(Article obj) {
-        articleRepo.findAll();
+    public List<Article> getAll() {
+        return articleRepo.findAll();
     }
     @Override
-    public  void getOne(Article obj) {
-        articleRepo.findById(obj.id);
+    public Optional<Article> getOne(long id) {
+        return articleRepo.findById(id);
     }
 
     @Override
-    public void delete(Article obj) {
-        articleRepo.delete(obj);
+    public void delete(long id) {
+        articleRepo.deleteById(id);
     }
 }

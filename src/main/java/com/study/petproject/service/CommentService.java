@@ -5,6 +5,9 @@ import com.study.petproject.model.User;
 import com.study.petproject.repo.CommentRepo;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class CommentService extends ObjectService<Comment> {
 
@@ -21,19 +24,19 @@ public class CommentService extends ObjectService<Comment> {
     }
 
     @Override
-    public  void getAll(Comment obj) {
-        commentRepo.findAll();
+    public List<Comment> getAll() {
+        return commentRepo.findAll();
     }
     @Override
-    public  void getOne(Comment obj) {
-        commentRepo.findById(obj.id);
+    public Optional<Comment> getOne(long id) {
+        return commentRepo.findById(id);
     }
     @Override
     public void edit(Comment obj) {
         commentRepo.save(obj);
     }
     @Override
-    public void delete(Comment obj) {
-        commentRepo.delete(obj);
+    public void delete(long id) {
+        commentRepo.deleteById(id);
     }
 }

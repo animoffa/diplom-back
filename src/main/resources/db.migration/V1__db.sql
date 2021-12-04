@@ -5,6 +5,7 @@ create table petprojectschema.user
     password    varchar(255) not null,
     name        varchar(255) not null,
     lastname    varchar(255) not null,
+    company     varchar(255) not null,
     phone       varchar(255) not null,
     birthday    timestamp,
     status      varchar(255),
@@ -12,10 +13,6 @@ create table petprojectschema.user
     about       text
 
 );
-
-insert into petprojectschema.user
-(id, email, password, name, lastname, phone, status, address, about)
-values (1, 'TESTEMAIL@EMAIL.COM', '123', 'qwe', 'qwe', 'qwe', 'KEKEKE', 'ADDRESS', 'ABOUT');
 
 create table petprojectschema.article
 (
@@ -36,11 +33,10 @@ create table petprojectschema.comment
 
 );
 
-create table petprojectschema.user_and_article_marks
+create table petprojectschema.user_and_article_likes
 (
     user_id     int8 not null,
     article_id  int8 not null,
-    mark        int not null,
     primary key (article_id, user_id)
 );
 
@@ -49,18 +45,4 @@ create table petprojectschema.article_and_comment
     article_id     int8 not null,
     comment_id  int8 not null,
     primary key (comment_id, article_id)
-);
-
-create table petprojectschema.user_and_comment_likes
-(
-    user_id     int8 not null,
-    comment_id  int8 not null,
-    primary key (comment_id, user_id)
-);
-
-create table petprojectschema.user_and_comment_dislikes
-(
-    user_id     int8 not null,
-    comment_id  int8 not null,
-    primary key (comment_id, user_id)
 );

@@ -87,7 +87,7 @@ public class UserService extends ObjectService<User> {
         return true;
     }
 
-    private Optional<User> findUserByEmail(String email) {
+    public Optional<User> findUserByEmail(String email) {
         return userRepo.findByEmail(email);
     }
 
@@ -97,6 +97,8 @@ public class UserService extends ObjectService<User> {
             return false;
         }
         User passUser = existsUser.get();
+
+        System.out.println("MATCHES " + user.password + "   " + passUser.password);
         return passwordEncoder.matches(user.password, passUser.password);
     }
 }

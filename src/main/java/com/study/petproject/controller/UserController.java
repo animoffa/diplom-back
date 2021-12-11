@@ -6,7 +6,6 @@ import com.study.petproject.model.Article;
 import com.study.petproject.model.User;
 import com.study.petproject.service.JwtService;
 import com.study.petproject.service.UserService;
-import io.jsonwebtoken.Jwt;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,7 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -26,6 +25,15 @@ public class UserController {
         this.jwtService = jwtService;
         this.userService = userService;
         this.authManager = authManager;
+    }
+    @GetMapping("/me")
+        public Optional<User> getUserInfo(@CurrentUser RuntimeUserInfo userInfo) {
+            return userService.findUserByEmail(userInfo.getUsername());
+        }
+
+    @PutMapping("/me")
+    public void editUserInfo(@RequestBody User user) {
+        userService.edit(user);
     }
 
     @PostMapping("/login")
@@ -62,7 +70,7 @@ public class UserController {
         return userService.register(user);
     }
 
-    @PostMapping("/like/{articleId}}")
+    @PutMapping("/articles/{articleId}")
     public void postArticle(@CurrentUser RuntimeUserInfo userInfo, @PathVariable long articleId) {
         userService.likeArticle(articleId, userInfo.user.id);
     }

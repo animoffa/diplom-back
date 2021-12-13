@@ -36,7 +36,6 @@ public class JwtService {
     }
 
     public String getUserEmailFromJWT(String jwt) {
-        System.out.println(jwt);
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt).getBody().getSubject();
     }
 }

@@ -19,7 +19,6 @@ public class CommentService extends ObjectService<Comment> {
 
     @Override
     public void add(Comment obj) {
-        System.out.println("add user");
         commentRepo.save(obj);
     }
 

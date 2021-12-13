@@ -44,7 +44,6 @@ public class UserService extends ObjectService<User> {
 
     @Override
     public void add(User obj) {
-        System.out.println("add user");
         userRepo.save(obj);
     }
 
@@ -72,7 +71,15 @@ public class UserService extends ObjectService<User> {
         articleService.getOne(articleId)
                 .ifPresent(existingArticle ->
                         getOne(userId).ifPresent(existingUser -> {
-                            existingArticle.likeList.add(existingUser);
+                            boolean alreadyLiked = existingArticle.likeList.stream()
+                                            .anyMatch(user -> user.id.equals(userId));
+
+                            if (alreadyLiked) {
+                                existingArticle.likeList.removeIf(user -> user.id.equals(userId));
+                            } else {
+                                existingArticle.likeList.add(existingUser);
+                            }
+
                             articleService.edit(existingArticle);
                         }));
     }
@@ -98,7 +105,6 @@ public class UserService extends ObjectService<User> {
         }
         User passUser = existsUser.get();
 
-        System.out.println("MATCHES " + user.password + "   " + passUser.password);
         return passwordEncoder.matches(user.password, passUser.password);
     }
 }

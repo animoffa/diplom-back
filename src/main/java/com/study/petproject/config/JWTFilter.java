@@ -31,7 +31,6 @@ public class JWTFilter extends OncePerRequestFilter {
             String jwt = getJwtFromRequest(request);
 
             if (StringUtils.hasText(jwt) && jwtService.validateToken(jwt)) {
-                System.out.println(111111111);
                 String userEmail = jwtService.getUserEmailFromJWT(jwt);
 
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
@@ -44,12 +43,10 @@ public class JWTFilter extends OncePerRequestFilter {
             logger.error("Could not set user authentication in security context", ex);
         }
 
-        System.out.println("22222222222");
         filterChain.doFilter(request, response);
     }
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authentication");
-        System.out.println("BEARER TOKEN === " + bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

@@ -35,6 +35,11 @@ public class UserController {
             return userService.findUserByEmail(userInfo.getUsername());
         }
 
+    @GetMapping("/users")
+    public List<User> getUsers() {
+        return userService.getAll();
+    }
+
     @PutMapping("/me")
     public void editUserInfo(@RequestBody User user) {
         userService.edit(user);

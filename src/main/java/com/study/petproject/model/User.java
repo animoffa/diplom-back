@@ -1,5 +1,7 @@
 package com.study.petproject.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.HashSet;
@@ -16,6 +18,7 @@ public class User {
     public String lastname;
     public String password;
     public String company;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
     public Instant birthday;
     public String phone;
     public String status;

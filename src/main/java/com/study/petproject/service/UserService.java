@@ -1,5 +1,6 @@
 package com.study.petproject.service;
 
+import com.study.petproject.model.Comment;
 import com.study.petproject.model.User;
 import com.study.petproject.repo.UserRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,10 +17,12 @@ public class UserService extends ObjectService<User> {
     private final UserRepo userRepo;
     private final ArticleService articleService;
     private final PasswordEncoder passwordEncoder;
+    private final CommentService commentService;
 
-    public UserService(UserRepo userRepo, ArticleService articleService, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepo userRepo, ArticleService articleService, CommentService commentService, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.articleService = articleService;
+        this.commentService = commentService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -79,6 +82,23 @@ public class UserService extends ObjectService<User> {
                             } else {
                                 existingArticle.likeList.add(existingUser);
                             }
+
+                            articleService.edit(existingArticle);
+                        }));
+    }
+
+    public void commentArticle (long articleId, long userId, String comment) {
+        articleService.getOne(articleId)
+                .ifPresent(existingArticle ->
+                        getOne(userId).ifPresent(existingUser -> {
+                            Comment _comment = new Comment();
+                            _comment.author=existingUser;
+                            _comment.date = Instant.now();
+                            _comment.text = comment;
+                            _comment = commentService.addComment(_comment);
+
+                            existingArticle.commentList.add(_comment);
+
 
                             articleService.edit(existingArticle);
                         }));

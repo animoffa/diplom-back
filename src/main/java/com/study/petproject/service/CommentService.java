@@ -22,6 +22,10 @@ public class CommentService extends ObjectService<Comment> {
         commentRepo.save(obj);
     }
 
+    public Comment addComment(Comment obj) {
+        return commentRepo.save(obj);
+    }
+
     @Override
     public List<Comment> getAll() {
         return commentRepo.findAll();

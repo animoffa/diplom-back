@@ -79,4 +79,9 @@ public class UserController {
         userService.likeArticle(articleId, userInfo.user.id);
         return articleService.getOne(articleId).orElse(null);
     }
+    @PutMapping("/comment/{articleId}")
+    public Article commentArticle(@CurrentUser RuntimeUserInfo userInfo, @PathVariable long articleId, @RequestBody String comment) {
+        userService.commentArticle(articleId, userInfo.user.id, comment);
+        return articleService.getOne(articleId).orElse(null);
+    }
 }

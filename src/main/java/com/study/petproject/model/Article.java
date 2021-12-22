@@ -1,5 +1,7 @@
 package com.study.petproject.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.HashSet;
@@ -23,7 +25,15 @@ public class Article {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     public Set<User> likeList = new HashSet<>();
 
+    @ManyToMany()
+    @JoinTable(
+            name = "article_and_comment",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    public Set<Comment> commentList = new HashSet<>();
+
     public String text;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
     public Instant date;
 
 }

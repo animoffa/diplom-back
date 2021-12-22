@@ -15,6 +15,7 @@ public class User {
     public Long id;
     public String email;
     public String name;
+    public String img;
     public String lastname;
     public String password;
     public String company;

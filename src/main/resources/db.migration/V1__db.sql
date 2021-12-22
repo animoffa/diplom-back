@@ -8,6 +8,7 @@ create table petprojectschema.user
     company     varchar(255) not null,
     phone       varchar(255) not null,
     birthday    timestamp,
+    img         text,
     status      varchar(255),
     address     varchar(255),
     about       text

@@ -33,7 +33,11 @@ public class Article {
     public Set<Comment> commentList = new HashSet<>();
 
     public String text;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
+
     public Instant date;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
+//    public Instant getDate() {
+//        return this.date;
+//    }
 
 }

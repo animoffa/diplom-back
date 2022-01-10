@@ -84,4 +84,10 @@ public class UserController {
         userService.commentArticle(articleId, userInfo.user.id, comment);
         return articleService.getOne(articleId).orElse(null);
     }
+
+    @PostMapping("/scrapping")
+    public String scrapping(@RequestBody String params){
+            return userService.scrappingELibrary("https://www.elibrary.ru/authors.asp", params);
+
+    };
 }

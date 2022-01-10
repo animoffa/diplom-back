@@ -19,7 +19,7 @@ public class User {
     public String lastname;
     public String password;
     public String company;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
     public Instant birthday;
     public String phone;
     public String status;

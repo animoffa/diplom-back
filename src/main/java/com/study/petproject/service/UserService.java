@@ -3,12 +3,22 @@ package com.study.petproject.service;
 import com.study.petproject.model.Comment;
 import com.study.petproject.model.User;
 import com.study.petproject.repo.UserRepo;
+import org.springframework.http.HttpEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import javax.annotation.PostConstruct;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -86,7 +96,91 @@ public class UserService extends ObjectService<User> {
                             articleService.edit(existingArticle);
                         }));
     }
+    private static String getDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        for(Map.Entry<String, String> entry : params.entrySet()){
+            if (first)
+                first = false;
+            else
+                result.append("&");
+            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+        }
+        return result.toString();
+    }
+    public static String scrappingELibrary(String targetURL, String urlParameters) {
+        byte[] postData = urlParameters.getBytes( StandardCharsets.UTF_8 );
 
+        HttpURLConnection connection = null;
+
+        try {
+            //Create connection
+            URL url = new URL(targetURL);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+
+//            connection.setRequestProperty("Content-Length",
+//                    Integer.toString(urlParameters.getBytes().length));
+//            connection.setRequestProperty("Content-Language", "en-US");
+
+            connection.setUseCaches(false);
+            connection.setDoOutput(true);
+
+            MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+            map.add("authors_all", "");
+            map.add("pagenum", "");
+            map.add("authorbox_name", "");
+            map.add("selid", "");
+            map.add("orgid", "");
+            map.add("orgadminid", "");
+            map.add("surname", "");
+            map.add("codetype", "SPIN");
+            map.add("codevalue", "9042-5877");
+            map.add("town", "");
+            map.add("countryid", "");
+            map.add("orgname", "");
+            map.add("rubriccode", "");
+            map.add("metrics", "1");
+            map.add("sortorder", "0");
+            map.add("order", "0");
+
+
+            //Send request
+            DataOutputStream wr = new DataOutputStream (
+                    connection.getOutputStream());
+            wr.writeBytes(String.valueOf(map));
+            System.out.println("=================> ");
+            System.out.println(String.valueOf(map));
+            wr.close();
+
+            //Get Response
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+            String line;
+            while ((line = rd.readLine()) != null) {
+                System.out.println(line);
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            System.out.println(response.toString());
+            System.out.println("response.toString()");
+            return response.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("error   1");
+            return null;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
     public void commentArticle (long articleId, long userId, String comment) {
         articleService.getOne(articleId)
                 .ifPresent(existingArticle ->

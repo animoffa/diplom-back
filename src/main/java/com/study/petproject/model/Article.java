@@ -14,6 +14,8 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
     public String title;
+    public String other_authors;
+    public String link;
 
     @ManyToOne()
     public User author;

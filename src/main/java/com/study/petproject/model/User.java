@@ -18,6 +18,7 @@ public class User {
     public String img;
     public String lastname;
     public String password;
+    public String spin;
     public String company;
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC")
     public Instant birthday;

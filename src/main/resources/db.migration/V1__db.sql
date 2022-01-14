@@ -9,6 +9,7 @@ create table petprojectschema.user
     phone       varchar(255) not null,
     birthday    timestamp,
     img         text,
+    spin        varchar(255),
     status      varchar(255),
     address     varchar(255),
     about       text
@@ -21,6 +22,8 @@ create table petprojectschema.article
     title       varchar(255) not null,
     author_id   int8 not null,
     date        timestamp not null,
+    other_authors   varchar(255),
+    link        text,
     text        text not null
 
 );

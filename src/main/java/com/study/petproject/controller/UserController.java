@@ -7,6 +7,7 @@ import com.study.petproject.model.User;
 import com.study.petproject.service.ArticleService;
 import com.study.petproject.service.JwtService;
 import com.study.petproject.service.UserService;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,10 +32,11 @@ public class UserController {
         this.articleService = articleService;
         this.authManager = authManager;
     }
+
     @GetMapping("/me")
-        public Optional<User> getUserInfo(@CurrentUser RuntimeUserInfo userInfo) {
-            return userService.findUserByEmail(userInfo.getUsername());
-        }
+    public Optional<User> getUserInfo(@CurrentUser RuntimeUserInfo userInfo) {
+        return userService.findUserByEmail(userInfo.getUsername());
+    }
 
     @GetMapping("/users")
     public List<User> getUsers() {
@@ -79,6 +82,7 @@ public class UserController {
         userService.likeArticle(articleId, userInfo.user.id);
         return articleService.getOne(articleId).orElse(null);
     }
+
     @PutMapping("/comment/{articleId}")
     public Article commentArticle(@CurrentUser RuntimeUserInfo userInfo, @PathVariable long articleId, @RequestBody String comment) {
         userService.commentArticle(articleId, userInfo.user.id, comment);
@@ -86,8 +90,9 @@ public class UserController {
     }
 
     @PostMapping("/scrapping")
-    public String scrapping(@RequestBody String params){
-            return userService.scrappingELibrary("https://www.elibrary.ru/authors.asp", params);
-
-    };
+    public ResponseEntity<String> scrapping(@RequestBody String spin) {
+        String res = userService.scrappingELibrary("https://www.elibrary.ru/authors.asp", spin);
+        System.out.println("RETURN RES ============== " + res.length());
+        return ResponseEntity.ok(res);
+    }
 }

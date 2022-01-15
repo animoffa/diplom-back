@@ -6,10 +6,11 @@ create table petprojectschema.user
     name        varchar(255) not null,
     lastname    varchar(255) not null,
     company     varchar(255) not null,
-    phone       varchar(255) not null,
+    phone       varchar(255),
     birthday    timestamp,
     img         text,
     spin        varchar(255),
+    is_articles_uploaded        boolean,
     status      varchar(255),
     address     varchar(255),
     about       text

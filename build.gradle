@@ -19,6 +19,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.24'
 	implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.2.0'
+	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+
 
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -3,6 +3,7 @@ package com.study.petproject.controller;
 import com.study.petproject.config.CurrentUser;
 import com.study.petproject.config.RuntimeUserInfo;
 import com.study.petproject.model.Article;
+import com.study.petproject.model.ScrapeArticlesRequest;
 import com.study.petproject.model.User;
 import com.study.petproject.service.ArticleService;
 import com.study.petproject.service.JwtService;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
@@ -93,6 +95,13 @@ public class UserController {
     public ResponseEntity<String> scrapping(@RequestBody String spin) {
         String res = userService.scrappingELibrary("https://www.elibrary.ru/authors.asp", spin);
         System.out.println("RETURN RES ============== " + res.length());
+        return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("/scrapeArticles")
+    public ResponseEntity<String> scrappingArticles(@RequestBody ScrapeArticlesRequest info) {
+        String res = userService.scrappingArticles("https://www.elibrary.ru/author_items.asp", info);
+        System.out.println("RETURN RES ============== " + res);
         return ResponseEntity.ok(res);
     }
 }

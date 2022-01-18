@@ -1,13 +1,16 @@
 package com.study.petproject.service;
 
 import com.study.petproject.model.Comment;
+import com.study.petproject.model.ScrapeArticlesRequest;
 import com.study.petproject.model.User;
 import com.study.petproject.repo.UserRepo;
+import org.apache.commons.logging.Log;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -20,12 +23,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class UserService extends ObjectService<User> {
@@ -116,6 +117,10 @@ public class UserService extends ObjectService<User> {
         }
         return result.toString();
     }
+
+
+
+
     public String scrappingELibrary(String targetURL, String spin) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -158,75 +163,88 @@ public class UserService extends ObjectService<User> {
         System.out.println("RES BODY ==== " + response.getBody());
         return response.getBody();
 
-
-//        byte[] postData = urlParameters.getBytes( StandardCharsets.UTF_8 );
-//        HttpURLConnection connection = null;
-//        try {
-//            //Create connection
-//            URL url = new URL(targetURL);
-//            connection = (HttpURLConnection) url.openConnection();
-//            connection.setRequestMethod("POST");
-//            connection.setRequestProperty("Content-Type",
-//                    "application/x-www-form-urlencoded");
-//
-////            connection.setRequestProperty("Content-Length",
-////                    Integer.toString(urlParameters.getBytes().length));
-////            connection.setRequestProperty("Content-Language", "en-US");
-//
-//            connection.setUseCaches(false);
-//            connection.setDoOutput(true);
-//
-//            MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-//            map.add("authors_all", "");
-//            map.add("pagenum", "");
-//            map.add("authorbox_name", "");
-//            map.add("selid", "");
-//            map.add("orgid", "");
-//            map.add("orgadminid", "");
-//            map.add("surname", "");
-//            map.add("codetype", "SPIN");
-//            map.add("codevalue", "9042-5877");
-//            map.add("town", "");
-//            map.add("countryid", "");
-//            map.add("orgname", "");
-//            map.add("rubriccode", "");
-//            map.add("metrics", "1");
-//            map.add("sortorder", "0");
-//            map.add("order", "0");
-//
-//
-//            //Send request
-//            DataOutputStream wr = new DataOutputStream (
-//                    connection.getOutputStream());
-//            wr.writeBytes(String.valueOf(map));
-//            System.out.println("=================> ");
-//            System.out.println(String.valueOf(map));
-//            wr.close();
-//
-//            //Get Response
-//            InputStream is = connection.getInputStream();
-//            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-//            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
-//            String line;
-//            while ((line = rd.readLine()) != null) {
-//                System.out.println(line);
-//                response.append(line);
-//                response.append('\r');
-//            }
-//            rd.close();
-//            System.out.println(response.toString());
-//            System.out.println("response.toString()");
-//            return response.toString();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            System.out.println("error   1");
-//            return null;
-//        } finally {
-//            if (connection != null) {
-//                connection.disconnect();
-//            }
-//        }
     }
+
+
+
+
+    public String scrappingArticles(String targetURL, ScrapeArticlesRequest info) {
+        ArrayList<String> articlesList = new ArrayList<String>(20);
+        String Articles = "";
+        for(Integer i=1; i<=info.pageCount; i++) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36");
+            headers.set("Connection", "keep-alive");
+            headers.set("accept-language", "ru,en-US;q=0.9,en;q=0.8");
+            //headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+
+            String encodedFio = null;
+            try {
+                encodedFio = URLEncoder.encode(info.fio, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                System.out.println("UnsupportedEncodingException");
+            }
+            MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+            map.add("itembox_name", "");
+            map.add("auth", "");
+            map.add("authorid", String.valueOf(info.id));
+            map.add("authorhash", encodedFio);
+            map.add("pagenum", String.valueOf(i));
+            map.add("add_all", "");
+            map.add("paysum", "");
+            map.add("slight", "");
+            map.add("show_refs", "1");
+            map.add("hide_doubles", "1");
+            map.add("items_all", "");
+            map.add("publs_all", "");
+            map.add("did", "1");
+            map.add("urlnum", "1");
+            map.add("rubric_order", "0");
+            map.add("title_order", "0");
+            map.add("org_order", "0");
+            map.add("author_order", "0");
+            map.add("year_order", "1");
+            map.add("type_order", "0");
+            map.add("role_order", "0");
+            map.add("keyword_order", "0");
+            map.add("show_option", "0");
+            map.add("show_hash", "0");
+            map.add("check_show_refs", "on");
+            map.add("check_hide_doubles", "on");
+            map.add("sortorder", "0");
+            map.add("order", "1");
+            map.add("itemboxid", "0");
+
+            HttpEntity<MultiValueMap<String, String>> req = new HttpEntity<>(map, headers);
+            RestTemplate template = new RestTemplate();
+            final HttpComponentsClientHttpRequestFactory factory2 = new HttpComponentsClientHttpRequestFactory();
+            final HttpClient httpClient = HttpClientBuilder.create()
+                    .setRedirectStrategy(new LaxRedirectStrategy())
+                    .build();
+
+            factory2.setHttpClient(httpClient);
+            template.setRequestFactory(factory2);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(targetURL);
+            ResponseEntity<String> response = template.exchange(builder.build().encode().toUri(), HttpMethod.POST, req, String.class);
+
+            System.out.println("URL ==== " + targetURL);
+            System.out.println("RES STATUS === " + response.getStatusCode());
+            System.out.println("RES BODY ==== " + response.getBody());
+            articlesList.add(new String(response.getBody().getBytes(), StandardCharsets.UTF_8));
+            Articles = Articles.concat(response.getBody());
+        }
+
+        return Articles;
+
+    }
+
+
+
+
+
+
     public void commentArticle (long articleId, long userId, String comment) {
         articleService.getOne(articleId)
                 .ifPresent(existingArticle ->
